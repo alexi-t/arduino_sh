@@ -1,0 +1,45 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "C:\\Users\\cankr\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.4.1\\cores\\esp8266",
+                "C:\\Users\\cankr\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.4.1\\libraries",
+                "C:\\Users\\cankr\\Documents\\Arduino\\libraries\\AzureIoTHub\\src",
+                "C:\\Users\\cankr\\Documents\\Arduino\\libraries\\AzureIoTProtocol_MQTT\\src",
+                "C:\\Users\\cankr\\Documents\\Arduino\\libraries\\AzureIoTUtility\\src",
+                "C:\\Users\\cankr\\Documents\\Arduino\\libraries\\ArduinoJson\\src",
+                "{path-to-arduino}/hardware/arduino/avr/cores/arduino/",
+                "{path-to-arduino}/hardware/arduino/avr/libraries/EEPROM/",
+                "{path-to-arduino}/hardware/arduino/avr/libraries/SPI/",
+                "{path-to-arduino}/hardware/arduino/avr/libraries/SoftwareSerial/",
+                "{path-to-arduino}/hardware/arduino/avr/libraries/Wire/",
+                "{path-to-arduino}/hardware/tools/avr/avr/include/",
+                "{path-to-arduino}/hardware/tools/avr/avr/include/avr/",
+                "{path-to-arduino}/hardware/tools/avr/avr/include/compat/",
+                "{path-to-arduino}/hardware/tools/avr/avr/include/util/",
+                "{path-to-arduino}/hardware/tools/avr/lib/gcc/avr/4.*.*/include/",
+                "{path-to-arduino}/hardware/tools/avr/lib/gcc/avr/4.*.*/include-fixed/",
+                "C:\\Users\\cankr\\Documents\\Arduino\\libraries\\DHT_sensor_library_for_ESPx",
+                "C:\\Users\\cankr\\Documents\\Arduino\\libraries\\DHT_sensor_library"
+            ],
+            "browse": {
+                "limitSymbolsToIncludedHeaders": false,
+                "path": [
+                    "C:\\Users\\cankr\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.4.1\\cores\\esp8266",
+                    "C:\\Users\\cankr\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.4.1\\libraries",
+                    "C:\\Users\\cankr\\Documents\\Arduino\\libraries\\AzureIoTHub\\src",
+                    "C:\\Users\\cankr\\Documents\\Arduino\\libraries\\AzureIoTProtocol_MQTT\\src",
+                    "C:\\Users\\cankr\\Documents\\Arduino\\libraries\\AzureIoTUtility\\src",
+                    "C:\\Users\\cankr\\Documents\\Arduino\\libraries\\ArduinoJson\\src",
+                    "C:\\Users\\cankr\\Documents\\Arduino\\libraries\\DHT_sensor_library_for_ESPx",
+                    "C:\\Users\\cankr\\Documents\\Arduino\\libraries\\DHT_sensor_library"
+                ]
+            },
+            "intelliSenseMode": "msvc-x64",
+            "cStandard": "c11",
+            "cppStandard": "c++17"
+        }
+    ],
+    "version": 3
+}
