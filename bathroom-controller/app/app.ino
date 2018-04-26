@@ -13,6 +13,8 @@
 
 #include "config.h"
 
+#include <pins_arduino.h>
+
 static bool messagePending = false;
 static bool messageSending = true;
 
