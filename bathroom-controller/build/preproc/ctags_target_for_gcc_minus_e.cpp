@@ -15,6 +15,8 @@
 
 # 15 "c:\\Users\\cankr\\Documents\\Arduino\\sh\\bathroom-controller\\app\\app.ino" 2
 
+# 17 "c:\\Users\\cankr\\Documents\\Arduino\\sh\\bathroom-controller\\app\\app.ino" 2
+
 static bool messagePending = false;
 static bool messageSending = true;
 
@@ -26,30 +28,32 @@ static int interval = 2000;
 
 void blinkYLED()
 {
-    digitalWrite(13, 0x1);
+    digitalWrite(D14, 0x1);
     delay(500);
-    digitalWrite(13, 0x0);
+    digitalWrite(D14, 0x0);
 }
 
 void blinkGLED()
 {
-    digitalWrite(13, 0x1);
+    digitalWrite(D14, 0x1);
     delay(500);
-    digitalWrite(13, 0x0);
+    digitalWrite(D14, 0x0);
 }
 
-
 static IOTHUB_CLIENT_LL_HANDLE iotHubClientHandle;
+
 void setup()
 {
-    pinMode(13, 0x01);
-    pinMode(12, 0x01);
-
-    pinMode(10, 0x00);
-    pinMode(9, 0x00);
+    pinMode(D14, 0x01);
+    pinMode(D14, 0x01);
 
     initSerial();
     delay(2000);
+
+    initIO();
+
+    initSensors(onMoveStart, onMoveEnd);
+
     readCredentials();
 
     initWifi();
@@ -62,19 +66,19 @@ void setup()
      *    compile error
 
     */
-# 61 "c:\\Users\\cankr\\Documents\\Arduino\\sh\\bathroom-controller\\app\\app.ino"
+# 65 "c:\\Users\\cankr\\Documents\\Arduino\\sh\\bathroom-controller\\app\\app.ino"
     // initIoThubClient();
     iotHubClientHandle = IoTHubClient_LL_CreateFromConnectionString(connectionString, MQTT_Protocol);
     if (iotHubClientHandle == __null)
     {
         Serial.println("Failed on IoTHubClient_CreateFromConnectionString.");
-        while (1);
+        while (1)
+            ;
     }
     else
     {
         Serial.printf("Created client from cs %s\r\n", connectionString);
     }
-
 
     IoTHubClient_LL_SetOption(iotHubClientHandle, "product_info", "bathroom-controller");
     IoTHubClient_LL_SetMessageCallback(iotHubClientHandle, receiveMessageCallback, __null);
@@ -83,6 +87,36 @@ void setup()
 }
 
 static int messageCount = 1;
+
+void onMoveStart()
+{
+    char messagePayload[256];
+    createLightMessage(messageCount, true, messagePayload);
+    sendMessage(iotHubClientHandle, messagePayload);
+    messageCount++;
+    enableLight();
+    delay(interval);
+}
+
+void onMoveEnd()
+{
+    char messagePayload[256];
+    createLightMessage(messageCount, false, messagePayload);
+    sendMessage(iotHubClientHandle, messagePayload);
+    messageCount++;
+    disableLight();
+    delay(interval);
+}
+
+void onTempMeasure(float temp, float humidity)
+{
+    char messagePayload[256];
+    createTempMessage(messageCount, temp, humidity, messagePayload);
+    sendMessage(iotHubClientHandle, messagePayload);
+    messageCount++;
+    delay(interval);
+}
+
 void loop()
 {
     // if (!messagePending && messageSending)
@@ -94,9 +128,7 @@ void loop()
     //     delay(interval);
     // }
 
-    int srValue = digitalRead(10);
-    Serial.printf("%d\r\n", srValue);
-    delay(2000);
+    checkSensors(onTempMeasure);
 
     IoTHubClient_LL_DoWork(iotHubClientHandle);
     delay(10);
@@ -197,6 +229,50 @@ int EEPROMread(int addr, char *buf)
     EEPROM.end();
     return count;
 }
+# 1 "c:\\Users\\cankr\\Documents\\Arduino\\sh\\bathroom-controller\\app\\gpio.ino"
+# 2 "c:\\Users\\cankr\\Documents\\Arduino\\sh\\bathroom-controller\\app\\gpio.ino" 2
+
+static boolean lightOverride = false;
+static boolean disableLightAfterOverrideClear = true;
+
+const int lightPin = D7;
+
+void initIO()
+{
+    pinMode(lightPin, 0x01);
+    digitalWrite(lightPin, 0x0);
+}
+
+void enableLight()
+{
+    digitalWrite(lightPin, 0x1);
+
+    if (lightOverride)
+        disableLightAfterOverrideClear = false;
+}
+
+void disableLight()
+{
+    if (lightOverride)
+    {
+        disableLightAfterOverrideClear = true;
+        return;
+    }
+    digitalWrite(lightPin, 0x0);
+}
+
+void overrideLight()
+{
+    lightOverride = true;
+    digitalWrite(lightPin, 0x1);
+}
+
+void clearLightOverride()
+{
+    lightOverride = false;
+    if (disableLightAfterOverrideClear)
+        digitalWrite(lightPin, 0x0);
+}
 # 1 "c:\\Users\\cankr\\Documents\\Arduino\\sh\\bathroom-controller\\app\\init.ino"
 void initWifi()
 {
@@ -261,7 +337,7 @@ static void sendCallback(IOTHUB_CLIENT_CONFIRMATION_RESULT result, void *userCon
     messagePending = false;
 }
 
-static void sendMessage(IOTHUB_CLIENT_LL_HANDLE iotHubClientHandle, char *buffer, bool temperatureAlert)
+static void sendMessage(IOTHUB_CLIENT_LL_HANDLE iotHubClientHandle, char *buffer)
 {
     IOTHUB_MESSAGE_HANDLE messageHandle = IoTHubMessage_CreateFromByteArray((const unsigned char *)buffer, strlen(buffer));
     if (messageHandle == __null)
@@ -330,15 +406,21 @@ int deviceMethodCallback(
 
     if (strcmp(methodName, "enableLight") == 0)
     {
-        blinkGLED();
-        //start();
+        overrideLight();
         Serial.println("Enable light");
     }
     else if (strcmp(methodName, "disableLight") == 0)
     {
-        blinkYLED();
-        //stop();
+        clearLightOverride();
         Serial.println("Disable light");
+    }
+    else if (strcmp(methodName, "enableVent") == 0)
+    {
+        Serial.println("Enable vent");
+    }
+    else if (strcmp(methodName, "disableVent") == 0)
+    {
+        Serial.println("Disable vent");
     }
     else
     {
@@ -384,25 +466,71 @@ void createLightMessage(int messageId, bool lightState, char *buffer)
 
     root.printTo(buffer, 256);
 }
+
+void createTempMessage(int messageId, float temp, float humidity, char *buffer)
+{
+    StaticJsonBuffer<256> jsonBuffer;
+    JsonObject &root = jsonBuffer.createObject();
+
+    root["deviceId"] = "Wemos D1";
+    root["messageId"] = messageId;
+
+    root["temp"] = temp;
+    root["humidity"] = humidity;
+
+    root.printTo(buffer, 256);
+}
 # 1 "c:\\Users\\cankr\\Documents\\Arduino\\sh\\bathroom-controller\\app\\sensor.ino"
-// #include <DHT.h>
+# 2 "c:\\Users\\cankr\\Documents\\Arduino\\sh\\bathroom-controller\\app\\sensor.ino" 2
+# 3 "c:\\Users\\cankr\\Documents\\Arduino\\sh\\bathroom-controller\\app\\sensor.ino" 2
 
-// static DHT dht(DHT_PIN, DHT_TYPE);
+int pirPin = D12;
+int lastTempMeasureTime;
+int dhtPeriod = 20000;
 
-// void initSensor()
-// {
-//     dht.begin();
-// }
 
-// float readTemperature()
-// {
-//     return dht.readTemperature();
-// }
 
-// float readHumidity()
-// {
-//     return dht.readHumidity();
-// }
+
+DHT dht(D11, 11);
+PIRSensor pir(pirPin);
+
+void initSensors(void (*moveStart)(), void (*moveEnd)())
+{
+  Serial.println("Start init sensors");
+  //init PIR
+  pinMode(pirPin, 0x00);
+  pir.init(moveStart, moveEnd);
+  Serial.println("PIR init OK");
+
+  //init DHT
+  pinMode(D11, 0x00);
+  dht.begin();
+  Serial.println("DHT init OK");
+
+  Serial.println("End init sensors");
+
+  lastTempMeasureTime = millis();
+}
+
+void checkSensors(void (*onTempMeasure)(float temp, float humidity))
+{
+  pir.check();
+
+  if (millis() - lastTempMeasureTime > dhtPeriod)
+  {
+    lastTempMeasureTime = millis();
+
+    float h = dht.readHumidity();
+    float t = dht.readTemperature();
+
+    if (isnan(h) || isnan(t))
+    {
+      Serial.println("Failed to read from DHT sensor!");
+      return;
+    }
+    onTempMeasure(t, h);
+  }
+}
 # 1 "c:\\Users\\cankr\\Documents\\Arduino\\sh\\bathroom-controller\\app\\serialReader.ino"
 void initSerial()
 {

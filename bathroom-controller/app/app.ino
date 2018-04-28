@@ -38,18 +38,20 @@ void blinkGLED()
     digitalWrite(Y_LED_PIN, LOW);
 }
 
-
 static IOTHUB_CLIENT_LL_HANDLE iotHubClientHandle;
+
 void setup()
 {
     pinMode(Y_LED_PIN, OUTPUT);
     pinMode(G_LED_PIN, OUTPUT);
 
-    pinMode(SR_PIN, INPUT);
-    pinMode(DHT_PIN, INPUT);
-
     initSerial();
     delay(2000);
+    
+    initIO();
+
+    initSensors(onMoveStart, onMoveEnd);
+
     readCredentials();
 
     initWifi();
@@ -65,13 +67,13 @@ void setup()
     if (iotHubClientHandle == NULL)
     {
         Serial.println("Failed on IoTHubClient_CreateFromConnectionString.");
-        while (1);
-    } 
-    else 
+        while (1)
+            ;
+    }
+    else
     {
         Serial.printf("Created client from cs %s\r\n", connectionString);
     }
-
 
     IoTHubClient_LL_SetOption(iotHubClientHandle, "product_info", "bathroom-controller");
     IoTHubClient_LL_SetMessageCallback(iotHubClientHandle, receiveMessageCallback, NULL);
@@ -80,6 +82,36 @@ void setup()
 }
 
 static int messageCount = 1;
+
+void onMoveStart()
+{
+    char messagePayload[MESSAGE_MAX_LEN];
+    createLightMessage(messageCount, true, messagePayload);
+    sendMessage(iotHubClientHandle, messagePayload);
+    messageCount++;
+    enableLight();
+    delay(interval);
+}
+
+void onMoveEnd()
+{
+    char messagePayload[MESSAGE_MAX_LEN];
+    createLightMessage(messageCount, false, messagePayload);
+    sendMessage(iotHubClientHandle, messagePayload);
+    messageCount++;
+    disableLight();
+    delay(interval);
+}
+
+void onTempMeasure(float temp, float humidity)
+{
+    char messagePayload[MESSAGE_MAX_LEN];
+    createTempMessage(messageCount, temp, humidity, messagePayload);
+    sendMessage(iotHubClientHandle, messagePayload);
+    messageCount++;
+    delay(interval);
+}
+
 void loop()
 {
     // if (!messagePending && messageSending)
@@ -91,9 +123,7 @@ void loop()
     //     delay(interval);
     // }
 
-    int srValue = digitalRead(SR_PIN);
-    Serial.printf("%d\r\n", srValue);
-    delay(2000);
+    checkSensors(onTempMeasure);
 
     IoTHubClient_LL_DoWork(iotHubClientHandle);
     delay(10);

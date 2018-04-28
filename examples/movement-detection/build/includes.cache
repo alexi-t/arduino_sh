@@ -10,7 +10,7 @@
     "Includepath": "C:\\Users\\cankr\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.4.1\\variants\\d1"
   },
   {
-    "Sourcefile": "c:\\Users\\cankr\\Documents\\Arduino\\sh\\examples\\movement-detection\\build\\sketch\\app.ino.cpp",
+    "Sourcefile": "c:\\Users\\cankr\\Documents\\Arduino\\sh\\examples\\movement-detection\\build\\sketch\\PIRSensor.cpp.cpp",
     "Include": "",
     "Includepath": ""
   }

@@ -1,5 +1,5 @@
-c:\Users\cankr\Documents\Arduino\sh\examples\movement-detection\build\sketch\app.ino.cpp.o: \
- c:\Users\cankr\Documents\Arduino\sh\examples\movement-detection\build\sketch\app.ino.cpp \
+c:\Users\cankr\Documents\Arduino\sh\examples\movement-detection\build\sketch\PIRSensor.cpp.cpp.o: \
+ c:\Users\cankr\Documents\Arduino\sh\examples\movement-detection\build\sketch\PIRSensor.cpp.cpp \
  C:\Users\cankr\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.4.1\cores\esp8266/Arduino.h \
  C:\Users\cankr\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.4.1/tools/sdk/libc/xtensa-lx106-elf/include/stdlib.h \
  C:\Users\cankr\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.4.1/tools/sdk/libc/xtensa-lx106-elf/include/machine/ieeefp.h \
@@ -57,4 +57,5 @@ c:\Users\cankr\Documents\Arduino\sh\examples\movement-detection\build\sketch\app
  C:\Users\cankr\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.4.1\cores\esp8266/md5.h \
  C:\Users\cankr\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.4.1\cores\esp8266/debug.h \
  C:\Users\cankr\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.4.1\variants\d1/pins_arduino.h \
- C:\Users\cankr\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.4.1\variants\d1/../generic/common.h
+ C:\Users\cankr\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.4.1\variants\d1/../generic/common.h \
+ c:\Users\cankr\Documents\Arduino\sh\examples\movement-detection\build\sketch\PIRSensor.h

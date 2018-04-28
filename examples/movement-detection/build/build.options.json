@@ -5,6 +5,6 @@
   "hardwareFolders": "C:\\Program Files (x86)\\Arduino\\hardware,C:\\Users\\cankr\\AppData\\Local\\Arduino15\\packages",
   "otherLibrariesFolders": "C:\\Users\\cankr\\Documents\\Arduino\\libraries",
   "runtime.ide.version": "10802",
-  "sketchLocation": "c:\\Users\\cankr\\Documents\\Arduino\\sh\\examples\\movement-detection\\app.ino",
+  "sketchLocation": "c:\\Users\\cankr\\Documents\\Arduino\\sh\\examples\\movement-detection\\PIRSensor.cpp",
   "toolsFolders": "C:\\Program Files (x86)\\Arduino\\tools-builder,C:\\Program Files (x86)\\Arduino\\hardware\\tools\\avr,C:\\Users\\cankr\\AppData\\Local\\Arduino15\\packages"
 }

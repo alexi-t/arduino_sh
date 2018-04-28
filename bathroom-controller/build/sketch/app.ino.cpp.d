@@ -203,4 +203,6 @@ c:\Users\cankr\Documents\Arduino\sh\bathroom-controller\build\sketch\app.ino.cpp
  C:\Users\cankr\Documents\Arduino\libraries\ArduinoJson\src/ArduinoJson/Polyfills/isInteger.hpp \
  C:\Users\cankr\Documents\Arduino\libraries\ArduinoJson\src/ArduinoJson/Polyfills/parseFloat.hpp \
  C:\Users\cankr\Documents\Arduino\libraries\ArduinoJson\src/ArduinoJson/Polyfills/parseInteger.hpp \
- C:\Users\cankr\Documents\Arduino\libraries\ArduinoJson\src/ArduinoJson/Serialization/JsonSerializerImpl.hpp
+ C:\Users\cankr\Documents\Arduino\libraries\ArduinoJson\src/ArduinoJson/Serialization/JsonSerializerImpl.hpp \
+ C:\Users\cankr\Documents\Arduino\libraries\DHT_sensor_library/DHT.h \
+ c:\Users\cankr\Documents\Arduino\sh\bathroom-controller\build\sketch\PIRSensor.h

@@ -17,7 +17,7 @@ static void sendCallback(IOTHUB_CLIENT_CONFIRMATION_RESULT result, void *userCon
     messagePending = false;
 }
 
-static void sendMessage(IOTHUB_CLIENT_LL_HANDLE iotHubClientHandle, char *buffer, bool temperatureAlert)
+static void sendMessage(IOTHUB_CLIENT_LL_HANDLE iotHubClientHandle, char *buffer)
 {
     IOTHUB_MESSAGE_HANDLE messageHandle = IoTHubMessage_CreateFromByteArray((const unsigned char *)buffer, strlen(buffer));
     if (messageHandle == NULL)
@@ -86,15 +86,21 @@ int deviceMethodCallback(
 
     if (strcmp(methodName, "enableLight") == 0)
     {
-        blinkGLED();
-        //start();
+        overrideLight();
         Serial.println("Enable light");
     }
     else if (strcmp(methodName, "disableLight") == 0)
     {
-        blinkYLED();
-        //stop();
+        clearLightOverride();
         Serial.println("Disable light");
+    }
+    else if (strcmp(methodName, "enableVent") == 0)
+    {
+        Serial.println("Enable vent");
+    }
+    else if (strcmp(methodName, "disableVent") == 0)
+    {
+        Serial.println("Disable vent");
     }
     else
     {
